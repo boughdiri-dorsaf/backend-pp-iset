@@ -1,17 +1,16 @@
-/* const express = require("express");
+const express = require("express");
 const router = express.Router();
 const responsableGroupController=require('../../controllers/evenementiel/responsableGroup')
 
 
-router.post("/", responsableGroupController);
+router.post("/", responsableGroupController.create);
 
-router.get("/", responsableGroupController);
+router.get("/", responsableGroupController.getListResponsableGroup);
 
-router.get("/:id", responsableGroupController);
+router.get("/:id", responsableGroupController.getResponsableGroupById);
 
-router.patch("/", responsableGroupController);
+router.patch("/", responsableGroupController.update);
 
-router.delete("/:id", responsableGroupController);
+router.delete("/:id", responsableGroupController.deleteResponsableGroup);
 
 module.exports = router;
- */

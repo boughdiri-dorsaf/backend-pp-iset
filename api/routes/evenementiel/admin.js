@@ -1,16 +1,16 @@
-/* const express = require("express");
+const express = require("express");
 const router = express.Router();
 const adminController=require('../../controllers/evenementiel/admin')
+const { checkToken } = require("../../auth/token_validation")
 
 
-router.post("/login", adminController);
+router.post("/login", adminController.getAdminByEmail);
 
-router.get("/:id", adminController);
+router.get("/",checkToken, adminController.getAdmin);
 
-router.patch("/", adminController);
+router.patch("/", checkToken, adminController.updateAdmin);
 
 
 module.exports = router;
 
-
- */
+ 

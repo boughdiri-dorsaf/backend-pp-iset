@@ -1,17 +1,16 @@
-/* const express = require("express");
+const express = require("express");
 const router = express.Router();
 const masterController=require('../../controllers/evenementiel/master')
 
 
-router.post("/", masterController);
+router.post("/", masterController.createMaster);
 
-router.get("/", masterController);
+router.get("/", masterController.getListMaster);
 
-router.get("/:id", masterController);
+router.get("/:id", masterController.getMasterById);
 
-router.patch("/", masterController);
+router.patch("/", masterController.updateMaster);
 
-router.delete("/:id", masterController);
+router.delete("/:id", masterController.deleteSpecialite);
 
 module.exports = router;
- */

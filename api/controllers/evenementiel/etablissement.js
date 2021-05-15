@@ -85,7 +85,7 @@ module.exports.updateEtablissement = (req, res) => {
     const data = req.body;
     connexion.query(
         "UPDATE etablissement SET libelle =?, code_postale =?, rue =?, ville = ?, gouvernorat_adresse = ?, pays = ? where id_etablissement = ?",
-        [data.libelle, data.code_postale, data.rue, data.ville, data.gouvernorat_adresse, data.pays, null, data.id_etablissement],
+        [data.libelle, data.code_postale, data.rue, data.ville, data.gouvernorat_adresse, data.pays, data.id_etablissement],
             (err, results) => {
                 if (err) {
                     res.status(500).json({

@@ -1,51 +1,133 @@
 const connexion = require('../../../db_connection');
+const bcrypt = require("bcrypt");
+const { sign } = require("jsonwebtoken");
+require("dotenv").config();
 
-    function getAdminById(id, callBack){
-      connexion.query(
-        `select * from user, adresse where user.id_user = adresse.id_user and user.id_user=?`,
-        [id],
-        (error, results, fields) => {
-          if (error) {
-            callBack(error);
-          }
-          return callBack(null, results);
+
+module.exports.getAdmin = (req, res) => {
+  const id_user = req.params.id;
+  connexion.query(
+    'select * from user, adresse where user.id_user = adresse.id_user and user.id_role = 4',
+    [id_user],
+    (err, results) => {
+      if (err) {
+        res.status(500).json({
+          err: true,
+          results: []
+        });
+      }
+
+      if (results)
+        res.status(200).json({
+          err: false,
+          results: results,
+        })
+      else
+        res.status(404).json({
+          err: false,
+          results: [],
+          message: "choix n'existe pas",
+        })
+    })
+};
+
+module.exports.updateAdmin = (req, res) => {
+  const data = req.body;
+  const salt = bcrypt.genSaltSync(10);
+  console.log(req)
+  data.password = bcrypt.hashSync(data.password, salt);
+  connexion.query(
+    'Update user set email = ?, password = ?, id_role = 4, nom = ?, prenom = ?, age = ?, cin = ?, sexe = ?, num_passport = ?, date_naissance = ? where id_user = ?',
+    [
+      data.email,
+      data.password,
+      data.nom,
+      data.prenom,
+      data.age,
+      data.cin,
+      data.sexe,
+      data.num_passport,
+      data.date_naissance,
+      data.id_user
+    ], (err, results) => {
+      if (err) {
+        res.status(500).json({
+          err: true,
+          results: err
+        });
+      }
+
+      if (results.affectedRows > 0) {
+        updateAdresse(data)
+        res.status(200).json({
+          err: false,
+          results: results.affectedRows,
+        })
+      } else {
+        res.status(404).json({
+          err: true,
+          results: err,
+          message: "echec lors du stockage",
+        })
+      }
+    })
+};
+
+function updateAdresse(data) {
+  connexion.query('update adresse set code_postale = ?, rue = ?, ville = ?, gouvernorat_adresse = ?, pays = ? where id_user = ?',
+    [
+      data.code_postale,
+      data.rue,
+      data.ville,
+      data.gouvernorat_adresse,
+      data.pays,
+      data.id_user
+    ]
+  )
+}
+
+module.exports.getAdminByEmail = (req, res) => {
+  const body = req.body;
+  connexion.query(
+    'select * from user where email = ? and id_role=4',
+    [body.email],
+    (err, results) => {
+      if (err) {
+        res.status(500).json({
+          err: true,
+          results: []
+        });
+      }
+      
+      if (results.length > 0) {
+        const result = bcrypt.compareSync(body.password, results[0].password);
+        console.log(result)
+        if (result) {
+          results.password = undefined;
+          const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
+            expiresIn: "1h"
+          });
+
+          res.status(200).json({
+            err: false,
+            message: "login successfully",
+            token: jsontoken,
+            id_user: results.id_user,
+          })
+        } else {
+          res.status(404).json({
+            err: false,
+            message: "Invalidpassword",
+          })
         }
-      );
-    };
 
-    function updateAdmin(data, callBack){
-        connexion.query('Update `user` set `email` = ?, `password` = ?, `id_role` = ?, `nom` = ?, `prenom` = ?, `age` = ?, `cin` = ?, `sexe` = ?, `num_passport` = ?, `date_naissance` = ? where id_user = ?',
-            [
-            data.email,
-            data.password,
-            2,
-            data.nom,
-            data.prenom,
-            data.age,
-            data.cin,
-            data.sexe,
-            data.num_passport,
-            data.date_naissance,
-            data.id_user
-            ], (err, res) => {
-                if(err) throw err
-                return callBack(null, res);
-            }
-        );
-    };
+      } else {
+        res.status(404).json({
+          err: false,
+          message: "User with this mail does not exist",
+        })
+      }
+    })
+};
 
-    function getAdminByEmail(email, callBack){
-        connexion.query(
-        `select * from user where email = ? and id_role=2`,
-        [email],
-        (error, results, fields) => {
-            if (error) {
-            callBack(error);
-            }
-            return callBack(null, results[0]);
-        }
-        );
-    };
-  
 
-    

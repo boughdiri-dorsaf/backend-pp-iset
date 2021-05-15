@@ -12,20 +12,21 @@ var client = require('./db_connection');
 /********************************/
 /***group evenementiel routers***/
 /********************************/
-//const adminRouter = require('./api/routes/evenementiel/admin');
+const adminRouter = require('./api/routes/evenementiel/admin');
 const classeRouter = require('./api/routes/evenementiel/classe');
-//const cursusRouter = require('./api/routes/evenementiel/cursus');
-//const demandeMasterRouter = require('./api/routes/evenementiel/demandeMaster');
+const cursusRouter = require('./api/routes/evenementiel/cursus');
+const demandeMasterRouter = require('./api/routes/evenementiel/demandeMaster');
 const departementRouter = require('./api/routes/evenementiel/departement');
-//const domaineRouter = require('./api/routes/evenementiel/domaine');
-//const etablissementRouter = require('./api/routes/evenementiel/etablissement');
-//const etudiantRouter = require('./api/routes/evenementiel/etudiant');
-//const masterRouter = require('./api/routes/evenementiel/master');
+const domaineRouter = require('./api/routes/evenementiel/domaine');
+const etablissementRouter = require('./api/routes/evenementiel/etablissement');
+const etudiantRouter = require('./api/routes/evenementiel/etudiant');
+const masterRouter = require('./api/routes/evenementiel/master');
 const niveauRouter = require('./api/routes/evenementiel/niveau');
-//const responsableGroupRouter = require('./api/routes/evenementiel/responsableGroup');
+const responsableGroupRouter = require('./api/routes/evenementiel/responsableGroup');
 const roleRouter = require('./api/routes/evenementiel/role');
 const specialiteRouter = require('./api/routes/evenementiel/specialite');
-//const userRouter = require('./api/routes/evenementiel/user');
+const userRouter = require('./api/routes/evenementiel/user');
+const situationRouter = require('./api/routes/evenementiel/situationEtudiant');
 
 
 /********************************/
@@ -85,20 +86,21 @@ const add_file= require('./api/routes/scolarite/AddFile')
 /***use group evenementiel routers***/
 /************************************/
 
-//app.use('/admin', adminRouter);
+app.use('/admin', adminRouter);
 app.use('/classe', classeRouter);
-//app.use('/cursus', cursusRouter);
-//app.use('/demandeMaster', demandeMasterRouter);
+app.use('/cursus', cursusRouter);
+app.use('/demandeMaster', demandeMasterRouter);
 app.use('/departement', departementRouter);
-//app.use('/domaine', domaineRouter);
-//app.use('/etablissement', etablissementRouter);
-//app.use('/etudiant', etudiantRouter);
-//app.use('/master', masterRouter);
+app.use('/domaine', domaineRouter);
+app.use('/etablissement', etablissementRouter);
+app.use('/etudiant', etudiantRouter);
+app.use('/master', masterRouter);
 app.use('/niveau', niveauRouter);
-//app.use('/responsableGroup', responsableGroupRouter);
+app.use('/responsableGroup', responsableGroupRouter);
 app.use('/role', roleRouter);
 app.use('/specialite', specialiteRouter);
-//app.use('/users', userRouter);
+app.use('/users', userRouter);
+app.use('/situation', situationRouter);
 
 
 /************************************/

@@ -1,8 +1,10 @@
 const connexion = require('../../../db_connection');
-
+const bcrypt = require("bcrypt");
 
 module.exports.create = (req, res) => {
     const data = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    data.password = bcrypt.hashSync(data.password, salt);
     connexion.query(
         'INSERT INTO user( nom, prenom, email, password,age, cin, sexe, num_passport, date_naissance,id_role,reset_link) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
         [data.nom, data.prenom, data.email, data.password, data.age, data.cin, data.sexe, data.num_passport, data.date_naissance, data.id_role, null
@@ -16,7 +18,7 @@ module.exports.create = (req, res) => {
             }
 
             if (results.affectedRows > 0) {
-                createResponsableGroup(data, results.insertId)
+                createResponsableGroup(data, results.insertId);
 
                 res.status(200).json({
                     err: false,
@@ -37,27 +39,7 @@ module.exports.create = (req, res) => {
 function createResponsableGroup(data, id_user) {
     connexion.query(
         "INSERT INTO responsable_group(qualite, id_user) VALUES (?, ?)",
-        [data.qualite, id_user],
-        (err, results) => {
-            if (err) {
-                res.status(500).json({
-                    err: true,
-                    message: err.sqlMessage,
-                });
-            }
-
-            if (results.affectedRows > 0)
-                res.status(200).json({
-                    err: false,
-                    results: results,
-                })
-            else
-                res.status(404).json({
-                    err: true,
-                    results: [],
-                    message: "echec lors du stockage",
-                })
-        }
+        [data.qualite, id_user]
     );
 }
 
@@ -115,12 +97,15 @@ module.exports.getResponsableGroupById = (req, res) => {
 };
 
 
-function update(data, callBack) {
-    connexion.query('Update user set email = ?, password = ?, id_role = ?, nom = ?, prenom = ?, age = ?, cin = ?, sexe = ?, num_passport = ?, date_naissance = ? where id_user = ?',
+module.exports.update = (req, res) => {
+    const data = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    data.password = bcrypt.hashSync(data.password, salt);
+    connexion.query('Update user set email = ?, password = ?, id_role = ?, nom = ?, prenom = ?, age = ?, cin = ?, sexe = ?, num_passport = ?, date_naissance = ?, reset_link=? where id_user = ?',
         [
             data.email,
             data.password,
-            1,
+            data.id_role,
             data.nom,
             data.prenom,
             data.age,
@@ -128,23 +113,36 @@ function update(data, callBack) {
             data.sexe,
             data.num_passport,
             data.date_naissance,
+            null,
             data.id_user
-        ], (err, res) => {
-            if (err) throw err
-            this.updateResponsableGroup(data, res.insertId, function () { })
-            return callBack(null, res);
-        }
-    );
+        ], (err, results) => {
+            if (err) {
+                res.status(500).json({
+                    err: true,
+                    results: err
+                });
+            }
+
+            if (results.affectedRows > 0) {
+                updateResponsableGroup(data);
+                res.status(200).json({
+                    err: false,
+                    results: results.affectedRows,
+                })
+            } else {
+                res.status(404).json({
+                    err: true,
+                    results: [],
+                    message: "echec lors du stockage",
+                })
+            }
+        })
 };
 
-function updateResponsableGroup(data, id_user, callBack) {
+function updateResponsableGroup(data) {
     connexion.query(
-        "UPDATE responsable_group SET qualite=?,id_user=? where id_responsable_group = ?",
-        [data.qualite, id_user, data.id_responsable_group],
-        (err, res) => {
-            if (err) throw err;
-            return callBack(null, res);
-        }
+        "UPDATE `responsable_group` SET `qualite`=? where id_user = ?",
+        [data.qualite, data.id_user]
     );
 }
 

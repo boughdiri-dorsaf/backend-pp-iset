@@ -1,22 +1,25 @@
-/*  const express = require("express");
+ const express = require("express");
 const router = express.Router();
 const userController=require('../../controllers/evenementiel/user')
+const { checkToken } = require("../../auth/token_validation")
 
 
-router.post("/login", userController);
+router.post("/login", userController.getUserByUserEmail);
+
+router.post("/", userController.create);
 
 router.get("/", userController.getUsers);
 
-router.get("/:id", userController.getUserByUserId);
+router.get("/:id", checkToken, userController.getUserByUserId);
 
-router.patch("/", userController.updateUser);
+router.patch("/", checkToken, userController.updateUser);
 
-router.patch("/forgotPassword", userController.updateUser);
+router.patch("/forgotPassword", userController.forgotPassword);
 
-router.patch("/resetPassword", userController.updateUser);
+router.patch("/resetPassword", userController.resetPassword);
 
 
 module.exports = router;
 
   
-   */
+   

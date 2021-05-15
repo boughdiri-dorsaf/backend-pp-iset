@@ -4,8 +4,8 @@ const connexion = require('../../../db_connection');
 module.exports.createEtudiant = (req, res) => {
     const data = req.body;
     connexion.query(
-        "INSERT INTO etudiant(gouvern_naissance, situation, id_classe, id_departement, id_user) VALUES (?,?,?,?,?)",
-        [data.gouvern_naissance, data.situation, data.id_classe, data.id_departement, data.id_user],
+        "INSERT INTO etudiant(id_situation_etudiant, id_departement, id_user) VALUES (?,?,?)",
+        [data.id_situation_etudiant, data.id_departement, data.id_user],
         (err, results) => {
             if (err) {
                 res.status(500).json({
@@ -31,7 +31,7 @@ module.exports.createEtudiant = (req, res) => {
 
 module.exports.getListEtudiant = (req, res) => {
 
-    connexion.query("SELECT * FROM etudiant,classe,departement,user,adresse WHERE etudiant.id_classe=classe.id_classe and etudiant.id_departement=departement.id_departement and etudiant.id_user=user.id_user and user.id_user=adresse.id_user",
+    connexion.query("SELECT *,situation_etudiant.libelle as situationLibelle FROM etudiant,situation_etudiant,departement,user,adresse WHERE etudiant.id_situation_etudiant=situation_etudiant.id_situation_etudiant and etudiant.id_departement = departement.id_departement and etudiant.id_user=user.id_user and user.id_user=adresse.id_user",
         (err, results) => {
             if (err) {
                 res.status(500).json({
@@ -55,10 +55,10 @@ module.exports.getListEtudiant = (req, res) => {
 };
 
 module.exports.getEtudiantById = (req, res) => {
-    const id_etudiant = req.params.id;
+    const id_user = req.params.id;
     connexion.query(
-        "SELECT * FROM etudiant,classe,departement,user,adresse WHERE etudiant.id_classe=classe.id_classe and etudiant.id_departement=departement.id_departement and etudiant.id_user=user.id_user and user.id_user=adresse.id_user and etudiant.id_user=?",
-        [id_etudiant],
+        "SELECT *,situation_etudiant.libelle as situationLibelle FROM etudiant,situation_etudiant,departement,user,adresse WHERE etudiant.id_situation_etudiant=situation_etudiant.id_situation_etudiant and etudiant.id_departement = departement.id_departement and etudiant.id_user=user.id_user and user.id_user=adresse.id_user and etudiant.id_user=?",
+        [id_user],
         (err, results) => {
 
             if (err) {
@@ -85,8 +85,8 @@ module.exports.getEtudiantById = (req, res) => {
 module.exports.updateEtudiant = (req, res) => {
     const data = req.body;
     connexion.query(
-        "UPDATE etudiant SET gouvern_naissance=?,situation=?,id_classe=?,id_departement=?,id_user=? WHERE id_etudiant =?",
-        [data.gouvern_naissance, data.situation, data.id_classe, data.id_departement, data.id_user, data.id_etudiant],
+        "UPDATE etudiant SET id_situation_etudiant=?, id_departement=?, id_user=? WHERE id_etudiant =?",
+        [data.id_situation_etudiant, data.id_departement, data.id_user, data.id_etudiant],
         (err, results) => {
             if (err) {
                 res.status(500).json({
@@ -109,6 +109,7 @@ module.exports.updateEtudiant = (req, res) => {
         })
 };
 
+/*
 module.exports.deleteEtudiant = (req, res) => {
     const id_etudiant = req.params.id;
     connexion.query(
@@ -122,17 +123,19 @@ module.exports.deleteEtudiant = (req, res) => {
                 });
             }
 
-            if (results.affectedRows > 0)
+            if (results.affectedRows > 0){
                 res.status(200).json({
                     err: false,
                     results: results.affectedRows,
                 })
-            else
+            }else{
                 res.status(404).json({
                     err: true,
                     results: [],
                     message: "echec lors de suppression",
                 })
+            }
         })
 };
 
+*/

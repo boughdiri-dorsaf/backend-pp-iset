@@ -1,16 +1,16 @@
-/* const express = require("express");
+const express = require("express");
 const router = express.Router();
 const etablissementController=require('../../controllers/evenementiel/etablissement')
 
 
-router.post("/", etablissementController);
+router.post("/", etablissementController.createEtablissement);
 
-router.get("/", etablissementController);
+router.get("/", etablissementController.getListEtablissement);
 
-router.get("/:id", etablissementController);
+router.get("/:id", etablissementController.getEtablissementById);
 
-router.patch("/", etablissementController);
+router.patch("/", etablissementController.updateEtablissement);
 
-router.delete("/:id", etablissementController);
+router.delete("/:id", etablissementController.deleteEtablissement);
 
-module.exports = router; */
+module.exports = router; 
