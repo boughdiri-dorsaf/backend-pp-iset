@@ -27,6 +27,7 @@ const roleRouter = require('./api/routes/evenementiel/role');
 const specialiteRouter = require('./api/routes/evenementiel/specialite');
 const userRouter = require('./api/routes/evenementiel/user');
 const situationRouter = require('./api/routes/evenementiel/situationEtudiant');
+const etatRouter = require('./api/routes/evenementiel/etatDemandeMaster');
 
 
 /********************************/
@@ -101,6 +102,7 @@ app.use('/role', roleRouter);
 app.use('/specialite', specialiteRouter);
 app.use('/users', userRouter);
 app.use('/situation', situationRouter);
+app.use('/etatDemande', etatRouter);
 
 
 /************************************/
