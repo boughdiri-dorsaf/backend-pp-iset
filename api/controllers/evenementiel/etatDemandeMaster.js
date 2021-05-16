@@ -1,10 +1,10 @@
 const connexion = require('../../../db_connection');
 
 
-module.exports.createRole = (req, res) => {
+module.exports.creatEtat = (req, res) => {
     const data = req.body;
     connexion.query(
-        "INSERT INTO role(libelle) VALUES (?)",
+        "INSERT INTO etat_demande_master(libelle) VALUES (?)",
         [data.libelle],
         (err, results) => {
             if (err) {
@@ -28,9 +28,9 @@ module.exports.createRole = (req, res) => {
         })
 };
 
-module.exports.getListRole = (req, res) => {
+module.exports.getListEtat = (req, res) => {
 
-    connexion.query("SELECT * FROM role", (err, results) => {
+    connexion.query("SELECT * FROM etat_demande_master", (err, results) => {
         if (err) {
             res.status(500).json({
                 err:true,
@@ -52,10 +52,10 @@ module.exports.getListRole = (req, res) => {
     })
 };
 
-module.exports.getRoleById = (req, res) => {
+module.exports.getEtatById = (req, res) => {
     const id_role = req.params.id;
     connexion.query(
-        "SELECT * FROM role where id_role = ?",
+        "SELECT * FROM etat_demande_master where id_etat_demande_master = ?",
         [id_role],
         (err, results) => {
             if (err) {
@@ -79,10 +79,10 @@ module.exports.getRoleById = (req, res) => {
         })
 };
 
-module.exports.updateRole = (req, res) => {
+module.exports.updateEtat = (req, res) => {
     const data = req.body;
     connexion.query(
-        "UPDATE role SET libelle=? where id_role = ?",
+        "UPDATE etat_demande_master SET libelle=? where id_etat_demande_master = ?",
         [data.libelle, data.id_role],
         (err, results) => {
             if (err) {
@@ -106,10 +106,10 @@ module.exports.updateRole = (req, res) => {
         })
 };
 
-module.exports.deleteRole = (req, res) => {
+module.exports.deleteEtat = (req, res) => {
     const id_role = req.params.id;
     connexion.query(
-        "DELETE FROM role where id_role = ?",
+        "DELETE FROM etat_demande_master where id_etat_demande_master = ?",
         [id_role],
         (err, results) => {
             if (err) {
