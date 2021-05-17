@@ -2,15 +2,16 @@ const express = require("express");
 const router = express.Router();
 const specialiteController=require('../../controllers/evenementiel/specialite')
 
+const { checkToken } = require("../../auth/token_validation")
 
-router.post("/", specialiteController.createSpecialite);
+router.post("/", checkToken, specialiteController.createSpecialite);
 
-router.get("/", specialiteController.getListSpecialite);
+router.get("/", checkToken, specialiteController.getListSpecialite);
 
-router.get("/:id", specialiteController.getSpecialiteById);
+router.get("/:id", checkToken, specialiteController.getSpecialiteById);
 
-router.patch("/", specialiteController.updateSpecialite);
+router.patch("/", checkToken, specialiteController.updateSpecialite);
 
-router.delete("/:id", specialiteController.deleteSpecialite);
+router.delete("/:id", checkToken, specialiteController.deleteSpecialite);
 
 module.exports = router;

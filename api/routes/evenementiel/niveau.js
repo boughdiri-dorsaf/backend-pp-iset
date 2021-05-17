@@ -2,16 +2,17 @@ const express = require("express");
 const router = express.Router();
 const niveauController=require('../../controllers/evenementiel/niveau')
 
+const { checkToken } = require("../../auth/token_validation")
 
-router.post("/", niveauController.createNiveau);
+router.post("/", checkToken, niveauController.createNiveau);
 
-router.get("/", niveauController.getListNiveau);
+router.get("/", checkToken, niveauController.getListNiveau);
 
-router.get("/:id", niveauController.getNiveauById);
+router.get("/:id", checkToken, niveauController.getNiveauById);
 
-router.patch("/", niveauController.updateNiveau);
+router.patch("/", checkToken, niveauController.updateNiveau);
 
-router.delete("/:id", niveauController.deleteNiveau);
+router.delete("/:id", checkToken, niveauController.deleteNiveau);
 
 module.exports = router;
  

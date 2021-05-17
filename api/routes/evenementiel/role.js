@@ -2,16 +2,17 @@ const express = require("express");
 const router = express.Router();
 const roleController=require('../../controllers/evenementiel/role')
 
+const { checkToken } = require("../../auth/token_validation")
 
-router.post("/", roleController.createRole);
+router.post("/", checkToken, roleController.createRole);
 
-router.get("/", roleController.getListRole);
+router.get("/", checkToken, roleController.getListRole);
 
-router.get("/:id", roleController.getRoleById);
+router.get("/:id", checkToken, roleController.getRoleById);
 
-router.patch("/", roleController.updateRole);
+router.patch("/", checkToken, roleController.updateRole);
 
-router.delete("/:id", roleController.deleteRole);
+router.delete("/:id", checkToken, roleController.deleteRole);
 
 module.exports = router;
  

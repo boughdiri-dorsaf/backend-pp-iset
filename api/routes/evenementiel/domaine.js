@@ -2,16 +2,17 @@ const express = require("express");
 const router = express.Router();
 const domaineController=require('../../controllers/evenementiel/domaine')
 
+const { checkToken } = require("../../auth/token_validation")
 
-router.post("/", domaineController.createDomaine);
+router.post("/", checkToken, domaineController.createDomaine);
 
-router.get("/", domaineController.getListDomaine);
+router.get("/", checkToken, domaineController.getListDomaine);
 
-router.get("/:id", domaineController.getDomaineById);
+router.get("/:id", checkToken, domaineController.getDomaineById);
 
-router.patch("/", domaineController.updateDomaine);
+router.patch("/", checkToken, domaineController.updateDomaine);
 
-router.delete("/:id", domaineController.deleteDomaine);
+router.delete("/:id", checkToken, domaineController.deleteDomaine);
 
 module.exports = router;
  

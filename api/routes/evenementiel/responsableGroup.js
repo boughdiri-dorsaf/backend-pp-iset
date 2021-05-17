@@ -2,15 +2,16 @@ const express = require("express");
 const router = express.Router();
 const responsableGroupController=require('../../controllers/evenementiel/responsableGroup')
 
+const { checkToken } = require("../../auth/token_validation")
 
-router.post("/", responsableGroupController.create);
+router.post("/", checkToken, responsableGroupController.create);
 
-router.get("/", responsableGroupController.getListResponsableGroup);
+router.get("/", checkToken, responsableGroupController.getListResponsableGroup);
 
-router.get("/:id", responsableGroupController.getResponsableGroupById);
+router.get("/:id", checkToken, responsableGroupController.getResponsableGroupById);
 
-router.patch("/", responsableGroupController.update);
+router.patch("/", checkToken, responsableGroupController.update);
 
-router.delete("/:id", responsableGroupController.deleteResponsableGroup);
+router.delete("/:id", rcheckToken, esponsableGroupController.deleteResponsableGroup);
 
 module.exports = router;

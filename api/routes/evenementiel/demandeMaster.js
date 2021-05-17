@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const demandeMasterController=require('../../controllers/evenementiel/demandeMaster')
+const { checkToken } = require("../../auth/token_validation")
 
 //Storage file in database -------------
 const multer = require('multer');
@@ -29,15 +30,15 @@ const upload = multer({
   fileFilter: fileFilter
 });
 //------------------------------
-router.post("/", upload.single('fichier'), demandeMasterController.createDemandeMaster);
+router.post("/", checkToken, upload.single('fichier'), demandeMasterController.createDemandeMaster);
 
-router.get("/", demandeMasterController.getListDemandeMaster);
+router.get("/", checkToken, demandeMasterController.getListDemandeMaster);
 
-router.get("/:id", demandeMasterController.getDemandeMasterById);
+router.get("/:id", checkToken, demandeMasterController.getDemandeMasterById);
 
-router.patch("/", upload.single('fichier'),  demandeMasterController.updateDemandeMaster);
+router.patch("/", checkToken, upload.single('fichier'),  demandeMasterController.updateDemandeMaster);
 
-router.delete("/:id", demandeMasterController.deleteDemandeMaster);
+router.delete("/:id", checkToken, demandeMasterController.deleteDemandeMaster);
 
 module.exports = router;
  

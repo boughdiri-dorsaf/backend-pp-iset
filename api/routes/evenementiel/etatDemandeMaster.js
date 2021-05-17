@@ -2,16 +2,17 @@ const express = require("express");
 const router = express.Router();
 const etatController=require('../../controllers/evenementiel/etatDemandeMaster')
 
+const { checkToken } = require("../../auth/token_validation")
 
-router.post("/", etatController.creatEtat);
+router.post("/", checkToken, etatController.creatEtat);
 
-router.get("/", etatController.getListEtat);
+router.get("/", checkToken, etatController.getListEtat);
 
-router.get("/:id", etatController.getEtatById);
+router.get("/:id", checkToken, etatController.getEtatById);
 
-router.patch("/", etatController.updateEtat);
+router.patch("/", checkToken, etatController.updateEtat);
 
-router.delete("/:id", etatController.deleteEtat);
+router.delete("/:id", checkToken, etatController.deleteEtat);
 
 module.exports = router;
  

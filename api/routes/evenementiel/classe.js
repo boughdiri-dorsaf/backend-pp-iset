@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const classeController=require('../../controllers/evenementiel/classe')
+const { checkToken } = require("../../auth/token_validation")
 
 
-router.post("/", classeController.createClasse);
+router.post("/", checkToken, classeController.createClasse);
 
-router.get("/", classeController.getListClasse);
+router.get("/", checkToken, classeController.getListClasse);
 
-router.get("/:id", classeController.getClasseById);
+router.get("/:id", checkToken, classeController.getClasseById);
 
-router.patch("/", classeController.updateClasse);
+router.patch("/", checkToken, classeController.updateClasse);
 
-router.delete("/:id", classeController.deleteClasse);
+router.delete("/:id", checkToken, classeController.deleteClasse);
 
 module.exports = router;
  

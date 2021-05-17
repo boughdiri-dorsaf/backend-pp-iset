@@ -3,15 +3,15 @@ const router = express.Router();
 const cursusController=require('../../controllers/evenementiel/cursus')
 
 
-router.post("/", cursusController.createCursus);
+router.post("/", checkToken, cursusController.createCursus);
 
-router.get("/", cursusController.getListCursus);
+router.get("/", checkToken, cursusController.getListCursus);
 
-router.get("/:id", cursusController.getCursusById);
+router.get("/:id", checkToken, cursusController.getCursusById);
 
-router.patch("/", cursusController.updateCursus);
+router.patch("/", checkToken, cursusController.updateCursus);
 
-router.delete("/:id", cursusController.deleteCursus);
+router.delete("/:id", checkToken, cursusController.deleteCursus);
 
 module.exports = router;
   

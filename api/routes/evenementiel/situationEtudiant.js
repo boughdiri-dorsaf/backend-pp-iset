@@ -2,15 +2,17 @@ const express = require("express");
 const router = express.Router();
 const situationController=require('../../controllers/evenementiel/situationEtudiant')
 
-router.post("/", situationController.createSituation);
+const { checkToken } = require("../../auth/token_validation")
 
-router.get("/", situationController.getListSituation);
+router.post("/", checkToken, situationController.createSituation);
 
-router.get("/:id", situationController.getSituationById);
+router.get("/", checkToken, situationController.getListSituation);
 
-router.patch("/", situationController.updateSituation);
+router.get("/:id", checkToken, situationController.getSituationById);
 
-router.delete("/:id", situationController.deleteSituation);
+router.patch("/", checkToken, situationController.updateSituation);
+
+router.delete("/:id", checkToken, situationController.deleteSituation);
 
 module.exports = router;
  

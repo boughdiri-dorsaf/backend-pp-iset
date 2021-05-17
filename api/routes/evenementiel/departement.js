@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const departementController=require('../../controllers/evenementiel/departement')
+const { checkToken } = require("../../auth/token_validation")
 
+router.post("/", checkToken, departementController.createDepartement);
 
-router.post("/", departementController.createDepartement);
+router.get("/", checkToken, departementController.getListDepartement);
 
-router.get("/", departementController.getListDepartement);
+router.get("/:id", checkToken, departementController.getDepartementById);
 
-router.get("/:id", departementController.getDepartementById);
+router.patch("/", checkToken, departementController.updateDepartement);
 
-router.patch("/", departementController.updateDepartement);
-
-router.delete("/:id", departementController.deleteDepartement);
+router.delete("/:id", checkToken, departementController.deleteDepartement);
 
 module.exports = router;
