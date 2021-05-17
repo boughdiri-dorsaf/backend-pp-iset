@@ -38,14 +38,14 @@ module.exports.create = (req, res) => {
 
 function createResponsableGroup(data, id_user) {
     connexion.query(
-        "INSERT INTO responsable_group(qualite, id_user) VALUES (?, ?)",
+        "INSERT INTO responsable_classe(qualite, id_user) VALUES (?, ?)",
         [data.qualite, id_user]
     );
 }
 
 module.exports.getListResponsableGroup = (req, res) => {
 
-    connexion.query("SELECT * FROM responsable_group,user WHERE responsable_group.id_user=user.id_user",
+    connexion.query("SELECT * FROM responsable_classe,user WHERE responsable_classe.id_user=user.id_user",
         (err, results) => {
             if (err) {
                 res.status(500).json({
@@ -71,7 +71,7 @@ module.exports.getListResponsableGroup = (req, res) => {
 module.exports.getResponsableGroupById = (req, res) => {
     const id_responsable_group = req.params.id;
     connexion.query(
-        "SELECT * FROM responsable_group,user WHERE responsable_group.id_user=user.id_user and id_responsable_group = ?",
+        "SELECT * FROM responsable_classe,user WHERE responsable_classe.id_user=user.id_user and id_responsable_group = ?",
         [id_responsable_group],
         (err, results) => {
 
@@ -141,7 +141,7 @@ module.exports.update = (req, res) => {
 
 function updateResponsableGroup(data) {
     connexion.query(
-        "UPDATE `responsable_group` SET `qualite`=? where id_user = ?",
+        "UPDATE responsable_classe SET qualite=? where id_user = ?",
         [data.qualite, data.id_user]
     );
 }
@@ -149,7 +149,7 @@ function updateResponsableGroup(data) {
 module.exports.deleteResponsableGroup = (req, res) => {
     const id_responsable_group = req.params.id;
     connexion.query(
-        "DELETE FROM responsable_group where id_responsable_group = ?",
+        "DELETE FROM responsable_classe where id_responsable_group = ?",
         [id_responsable_group],
         (err, results) => {
             if (err) {
