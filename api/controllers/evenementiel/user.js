@@ -7,6 +7,9 @@ const mailgun = require("mailgun-js");
 const DOMAIN = 'sandbox8cbfcafa2ff54adfabcbdba4ce193360.mailgun.org';
 const mg = mailgun({ apiKey: process.env.MAILGUN_APIKEY, domain: DOMAIN })
 
+const mailer = require('nodemailer');
+const smtp = require('nodemailer-smtp-transport');
+
 module.exports.getUsers = (req, res) => {
 
     connexion.query('Select * from user, adresse where user.id_user= adresse.id_user',
@@ -37,7 +40,7 @@ module.exports.create = (req, res) => {
     const data = req.body;
     const salt = bcrypt.genSaltSync(10);
     data.password = bcrypt.hashSync(data.password, salt);
-    connexion.query('INSERT INTO user(nom, prenom,email, password, age, cin, sexe, num_passport, date_naissance,id_role,gouvern_naissance) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+    connexion.query('INSERT INTO user(nom, prenom,email, password, age, cin, sexe, num_passport, date_naissance,id_role,gouvern_naissance, id_situation_professionnel) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
         [
             data.nom,
             data.prenom,
@@ -48,8 +51,9 @@ module.exports.create = (req, res) => {
             data.sexe,
             data.num_passport,
             data.date_naissance,
-            2,
-            data.gouvern_naissance
+            9,
+            data.gouvern_naissance,
+            data.id_situation_professionnel
         ],
         (err, results) => {
             if (err) {
@@ -61,11 +65,20 @@ module.exports.create = (req, res) => {
 
             if (results.affectedRows > 0) {
                 createAdresse(data, results.insertId);
-
-                res.status(200).json({
-                    err: false,
-                    results: results,
-                })
+                confirmInscriPlatform(data.email).then(result=>{
+                    res.status(200).json({
+                        //result:result
+                    });
+                  }).catch(err=>{
+                    res.status(404).json({
+                        result:err
+                        });
+                  })
+                  
+                    res.status(200).json({
+                        err: false,
+                        results: results,
+                    })
             } else {
                 res.status(404).json({
                     err: true,
@@ -231,28 +244,16 @@ module.exports.forgotPassword = (req, res) => {
 
             if (results.length > 0) {
                 const token = jwt.sign({ _id: results._id }, process.env.RESET_PASSWORD_KEY, { expiresIn: '20m' });
-                const data = {
-                    from: 'noreply@bdorsaf.com',
-                    to: body.email,
-                    subject: 'account reset password link',
-                    html: `
-                        <h2>Please click on given link to reset your password</h2>
-                        <p>${process.env.CLIENT_URL}/users/resetpassword/${token}</p>      
-                    `
-                };
-                mg.messages().send(data, function (error, body) {
-                    if (error) {
-                      res.status(500).json({
-                        err: false,
-                        Token: error.message,
-                    })
-                    } else {
-                      res.status(200).json({
-                        success: 1,
-                        message: "Email has been sent, kindly follow the instruction"
-                      })
-                    }
-                  });
+
+                resetPasswordMail(body.email, token).then(result=>{
+                    res.status(200).json({
+                        result:result
+                    });
+                  }).catch(err=>{
+                    res.status(404).json({
+                        result:err
+                        });
+                  })
 
                   res.status(200).json({
                     err: false,
@@ -295,7 +296,6 @@ module.exports.resetPassword = (req, res) => {
 
 };
 
-
 function updatePasswordUser(password, email) {
     connexion.query(
         'update user set password = ? where email = ?',
@@ -306,4 +306,50 @@ function updatePasswordUser(password, email) {
     );
 };
 
+  async function resetPasswordMail(email, token) {
+                
+    const transport = mailer.createTransport(
+        smtp({
+            host: 'in.mailjet.com',
+            port: 2525,
+            auth: {
+                user: process.env.API_KEY,
+                pass: process.env.API_SECRET,
+            },
+        })
+    );
+  
+    const json = await transport.sendMail({
+        from: process.env.EMAIL,
+        to: [email],
+        subject: 'account reset password link',
+        html: `
+            <h2>Please click on given link to reset your password</h2>
+        <p>${process.env.CLIENT_URL}/users/resetpassword/${token}</p>      
+        `
+    });
+    console.log(json);
+    return json;
+  }
 
+  async function confirmInscriPlatform(email) {
+    const transport = mailer.createTransport(
+        smtp({
+            host: 'in.mailjet.com',
+            port: 2525,
+            auth: {
+                user: process.env.API_KEY,
+                pass: process.env.API_SECRET,
+            },
+        })
+    );
+  
+    const json = await transport.sendMail({
+      from: process.env.EMAIL,
+      to: [email],
+      subject: 'Confirmation d\inscription dans le platforme ...', 
+      html: 'Bonjour Nous vous confirmons votre inscription à la platforme ...<a href="http://localhost:4200/auth">Connexion</a>', 
+    });
+    console.log(json);
+    return json;
+  }

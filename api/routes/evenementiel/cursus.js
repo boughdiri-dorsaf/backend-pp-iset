@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cursusController=require('../../controllers/evenementiel/cursus')
+const { checkToken } = require("../../auth/token_validation")
 
 
 router.post("/", checkToken, cursusController.createCursus);

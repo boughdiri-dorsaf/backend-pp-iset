@@ -12,6 +12,6 @@ router.get("/:id", checkToken, responsableGroupController.getResponsableGroupByI
 
 router.patch("/", checkToken, responsableGroupController.update);
 
-router.delete("/:id", rcheckToken, esponsableGroupController.deleteResponsableGroup);
+router.delete("/:id", checkToken, responsableGroupController.deleteResponsableGroup);
 
 module.exports = router;
