@@ -1,7 +1,7 @@
  const express = require("express");
 const router = express.Router();
 const userController=require('../../controllers/evenementiel/user')
-const { checkToken } = require("../../auth/token_validation")
+const { checkToken } = require("../../middleware/token_validation")
 
 
 router.post("/login", userController.getUserByUserEmail);

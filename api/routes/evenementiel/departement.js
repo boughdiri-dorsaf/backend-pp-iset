@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const departementController=require('../../controllers/evenementiel/departement')
-const { checkToken } = require("../../auth/token_validation")
+
+const { checkToken } = require("../../middleware/token_validation")
 
 router.post("/", checkToken, departementController.createDepartement);
 

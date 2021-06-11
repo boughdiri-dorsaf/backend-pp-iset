@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const classeController=require('../../controllers/evenementiel/classe')
-const { checkToken } = require("../../auth/token_validation")
+const { checkToken } = require("../../middleware/token_validation")
 
 
 router.post("/", checkToken, classeController.createClasse);

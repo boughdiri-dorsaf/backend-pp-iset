@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const niveauController=require('../../controllers/evenementiel/niveau')
 
-const { checkToken } = require("../../auth/token_validation")
+const { checkToken } = require("../../middleware/token_validation")
 
 router.post("/", checkToken, niveauController.createNiveau);
 

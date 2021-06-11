@@ -188,7 +188,7 @@ function updateAdresse(data) {
 module.exports.getUserByUserEmail = (req, res) => {
     const body = req.body;
     connexion.query(
-        'select * from user where email = ? and id_role=2',
+        'select * from user where email = ? and id_role=9',
         [body.email],
         (err, results) => {
             if (err) {

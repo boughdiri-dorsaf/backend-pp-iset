@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const demandeMasterController=require('../../controllers/evenementiel/demandeMaster')
-const { checkToken } = require("../../auth/token_validation")
+const { checkToken } = require("../../middleware/token_validation")
 
 //Storage file in database -------------
 const multer = require('multer');
