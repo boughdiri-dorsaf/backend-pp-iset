@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const BacController=require('../../controllers/evenementiel/bacclaureat')
-const { checkToken } = require("../../auth/token_validation")
+const { checkToken } = require("../../middleware/token_validation")
 
 
 router.post("/", BacController.createBacclaureat);
