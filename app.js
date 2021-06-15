@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+
 const dotenv = require('dotenv');
 dotenv.config();
 var client = require('./db_connection');
@@ -14,7 +15,6 @@ var client = require('./db_connection');
 /********************************/
 const adminRouter = require('./api/routes/evenementiel/admin');
 const classeRouter = require('./api/routes/evenementiel/classe');
-const cursusRouter = require('./api/routes/evenementiel/cursus');
 const demandeMasterRouter = require('./api/routes/evenementiel/demandeMaster');
 const departementRouter = require('./api/routes/evenementiel/departement');
 const domaineRouter = require('./api/routes/evenementiel/domaine');
@@ -28,6 +28,13 @@ const specialiteRouter = require('./api/routes/evenementiel/specialite');
 const userRouter = require('./api/routes/evenementiel/user');
 const situationRouter = require('./api/routes/evenementiel/situationEtudiant');
 const etatRouter = require('./api/routes/evenementiel/etatDemandeMaster');
+const paysRouter = require('./api/routes/evenementiel/pays');
+const gouvernRouter = require('./api/routes/evenementiel/gouvernerat');
+const villeRouter = require('./api/routes/evenementiel/ville');
+
+const cursusRouter = require('./api/routes/evenementiel/cursus');
+const bacRouter = require('./api/routes/evenementiel/bacclaureat');
+const CursusGRouter = require('./api/routes/evenementiel/cursusG');
 
 
 /********************************/
@@ -87,9 +94,14 @@ const add_file= require('./api/routes/scolarite/AddFile')
 /***use group evenementiel routers***/
 /************************************/
 
+/* pour l'affichage de fichier importee  */
+app.use(express.static('public'));
+app.use('/demande-master', express.static('demande-master'));
+app.use('/etablissement_logo', express.static('etablissement_logo'));
+/************************************/
+
 app.use('/admin', adminRouter);
 app.use('/classe', classeRouter);
-app.use('/cursus', cursusRouter);
 app.use('/demandeMaster', demandeMasterRouter);
 app.use('/departement', departementRouter);
 app.use('/domaine', domaineRouter);
@@ -103,7 +115,14 @@ app.use('/specialite', specialiteRouter);
 app.use('/users', userRouter);
 app.use('/situation', situationRouter);
 app.use('/etatDemande', etatRouter);
+app.use('/pays', paysRouter);
+app.use('/ville', villeRouter);
+app.use('/gouvernerat', gouvernRouter);
 
+
+app.use('/cursus', cursusRouter);
+app.use('/bacclaureat', bacRouter);
+app.use('/cursusG', CursusGRouter);
 
 /************************************/
 /***use group stage pfe routers******/

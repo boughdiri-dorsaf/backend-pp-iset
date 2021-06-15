@@ -12,7 +12,7 @@ const smtp = require('nodemailer-smtp-transport');
 
 module.exports.getUsers = (req, res) => {
 
-    connexion.query('Select * from user, adresse where user.id_user= adresse.id_user',
+    connexion.query('select * from user, adresse, situation_professionnel, pays, ville,gouvernerat where user.id_user = adresse.id_user and adresse.pays = pays.id_pays and adresse.ville =ville.id_ville and adresse.gouvernorat_adresse = gouvernerat.id_gouvernerat and user.id_situation_professionnel= situation_professionnel.id_situation_professionnel and id_role=9',
         (err, results) => {
             if (err) {
                 res.status(500).json({
@@ -64,7 +64,7 @@ module.exports.create = (req, res) => {
             }
 
             if (results.affectedRows > 0) {
-                createAdresse(data, results.insertId);
+                if(createAdresse(data, results.insertId));
                 confirmInscriPlatform(data.email).then(result=>{
                     res.status(200).json({
                         //result:result
@@ -79,6 +79,7 @@ module.exports.create = (req, res) => {
                         err: false,
                         results: results,
                     })
+                
             } else {
                 res.status(404).json({
                     err: true,
@@ -105,7 +106,7 @@ function createAdresse(data, id_user) {
 
 module.exports.getUserByUserId = (req, res, next) => {
     const id_user = req.params.id;
-    const sql = 'select * from user, adresse where user.id_user = adresse.id_user and user.id_user=?';
+    const sql = 'select * from user, adresse, situation_professionnel, pays, ville,gouvernerat where user.id_user = adresse.id_user and adresse.pays = pays.id_pays and adresse.ville =ville.id_ville and adresse.gouvernorat_adresse = gouvernerat.id_gouvernerat and user.id_situation_professionnel= situation_professionnel.id_situation_professionnel and user.id_user=? and user.id_role=9';
 
     connexion.query(sql, [id_user], (err, row, fields) => {
         if (!err) {
@@ -135,7 +136,7 @@ module.exports.updateUser = (req, res) => {
     console.log(req)
     data.password = bcrypt.hashSync(data.password, salt);
     connexion.query(
-        'Update user set email = ?, password = ?, id_role = 2, nom = ?, prenom = ?, age = ?, cin = ?, sexe = ?, num_passport = ?, date_naissance = ?, gouvern_naissance=? where id_user = ?',
+        'Update user set email = ?, password = ?, id_role = 9, nom = ?, prenom = ?, age = ?, cin = ?, sexe = ?, num_passport = ?, date_naissance = ?, gouvern_naissance=? where id_user = ?',
         [
             data.email,
             data.password,
@@ -204,7 +205,7 @@ module.exports.getUserByUserEmail = (req, res) => {
                 if (result) {
                     results.password = undefined;
                     const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
-                        expiresIn: "1h"
+                        
                     });
 
                     res.status(200).json({

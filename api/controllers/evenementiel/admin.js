@@ -7,7 +7,7 @@ require("dotenv").config();
 module.exports.getAdmin = (req, res) => {
   const id_user = req.params.id;
   connexion.query(
-    'select * from user, adresse where user.id_user = adresse.id_user and user.id_role = 4',
+    'select * from user, adresse, situation_professionnel, pays, ville,gouvernerat where user.id_user = adresse.id_user and adresse.pays = pays.id_pays and adresse.ville =ville.id_ville and adresse.gouvernorat_adresse = gouvernerat.id_gouvernerat and user.id_situation_professionnel= situation_professionnel.id_situation_professionnel and user.id_role = 4',
     [id_user],
     (err, results) => {
       if (err) {
@@ -105,7 +105,6 @@ module.exports.getAdminByEmail = (req, res) => {
         if (result) {
           results.password = undefined;
           const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
-            expiresIn: "1h"
           });
 
           res.status(200).json({

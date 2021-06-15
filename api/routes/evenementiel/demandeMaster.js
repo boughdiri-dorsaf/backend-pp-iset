@@ -30,13 +30,15 @@ const upload = multer({
   fileFilter: fileFilter
 });
 //------------------------------
+
+
 router.post("/", checkToken, upload.single('fichier'), demandeMasterController.createDemandeMaster);
 
 router.get("/", checkToken, demandeMasterController.getListDemandeMaster);
 
 router.get("/:id", checkToken, demandeMasterController.getDemandeMasterById);
 
-router.patch("/", checkToken, upload.single('fichier'),  demandeMasterController.updateDemandeMaster);
+router.patch("/", checkToken, upload.single('fichier'), demandeMasterController.updateDemandeMaster);
 
 router.delete("/:id", checkToken, demandeMasterController.deleteDemandeMaster);
 
